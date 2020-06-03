@@ -15,6 +15,7 @@ library(dplyr)
 library(lmtest)
 library(glmmTMB)
 library(DHARMa)
+library(rcompanion)
 
 ------------------------------------CARBONYL CARBON ANALYSES------------------------------------
 
@@ -116,10 +117,16 @@ parameter.summary.CC<-data.frame(glm=m1.SoilNMR$coefficients,
 write.csv(parameter.summary.CC,"CCparameters.csv",row.names = FALSE)
 
 # ---- Fit statistics: SoilNMR -----
+
+#Calculate r-squared for LR using Coz and Snell
+library(rcompanion)
+nagelkerke(m1.SoilNMR) #R^2 for GLM is the Cox and Snell R-squared value
+nagelkerke(m3) #R^2 for Beta is the Cox and Snell R-squared value
+
 fit.SoilNMR<-data.frame(Fit.statistics=c('AIC','LR','Residual Deviance'),
-                     glm=c(AIC(m1.SoilNMR),exp(logLik(m1.SoilNMR)),
+                     glm=c(AIC(m1.SoilNMR),(1-0.9926)^(-36/2),
                            sum(m1.SoilNMR$residuals^2)/m1.SoilNMR$df.residual),
-                     beta=c(AIC(m3),exp(logLik(m3)),
+                     beta=c(AIC(m3),(1-0.9851)^(-36/2),
                             sum(m3$residuals^2)/m3$df.residual))
 
 # save table
@@ -215,19 +222,25 @@ m4.SoilNMR$coefficients
 summary(m6.SoilNMR)
 betacoef.AC<-m6.SoilNMR$mu.coefficients
 odds.AC<-exp(coef(m6.SoilNMR))
-beta.prob.AC<-odds/(1+odds)
+beta.prob.AC<-odds.AC/(1+odds.AC)
 
 parameter.summary.AC<-data.frame(glm=m4.SoilNMR$coefficients,
                               beta=beta.prob.AC[-c(13)])
 
 # save table
-write.csv(parameter.summary,"AC.parameters.csv",row.names = FALSE)
+write.csv(parameter.summary.AC,"AC.parameters.csv",row.names = FALSE)
 
 # ---- Fit statistics: SoilNMR -----
+
+#Calculate r-squared for LR using Coz and Snell
+library(rcompanion)
+nagelkerke(m4.SoilNMR) #R^2 for GLM is the Cox and Snell R-squared value
+nagelkerke(m6.SoilNMR) #R^2 for Beta is the Cox and Snell R-squared value
+
 fit.SoilNMR<-data.frame(Fit.statistics=c('AIC','LR','Residual Deviance'),
-                        glm=c(AIC(m4.SoilNMR),exp(logLik(m4.SoilNMR)),
+                        glm=c(AIC(m4.SoilNMR),(1-0.9853)^(-36/2),
                               sum(m4.SoilNMR$residuals^2)/m4.SoilNMR$df.residual),
-                        beta=c(AIC(m6.SoilNMR),exp(logLik(m6.SoilNMR)),
+                        beta=c(AIC(m6.SoilNMR),(1-0.9830)^(-36/2),
                                sum(m6.SoilNMR$residuals^2)/m6.SoilNMR$df.residual))
 
 # save table
