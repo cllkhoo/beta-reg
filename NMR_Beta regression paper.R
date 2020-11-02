@@ -29,13 +29,22 @@ m1.SoilNMR<-glm(CC~Region+Layer+Region*Layer,data=na.omit(SoilNMR),
              family = gaussian(link="identity"))
 plot(m1.SoilNMR)
 hist(resid(m1.SoilNMR))
-# plots for manuscript
-plot(x=fitted(m1.SoilNMR),y=resid(m1.SoilNMR),main=NULL,xlab="Fitted Values",ylab="Residuals")
-hist(resid(m1.SoilNMR),main=NULL,xlab="Residuals")
-qqnorm(resid(m1.SoilNMR),main=NULL)
+
+# Plot for manuscript - Carbonyl Carbon GLM
+png("CarbonylCarbon_DiagnosticPlotsGLM.png", width = 160, height = 160, units = "mm", res = 600)
+par(mfrow=c(2,2))
+plot(x=fitted(m1.SoilNMR),y=resid(m1.SoilNMR),main=NULL,xlab="Fitted Values",ylab="Residuals",cex.lab=1.15)
+mtext("A", side = 2, line = 2, at = 0.009, col = 'black', font = 2, las = 1)
+hist(resid(m1.SoilNMR),main=NULL,xlab="Residuals", cex.lab=1.15)
+mtext("B", side = 2, line = 2, at = 10.3, col = 'black', font = 2, las = 1)
+qqnorm(resid(m1.SoilNMR),main=NULL, cex.lab=1.15)
+mtext("C", side = 2, line = 2, at = 0.009, col = 'black', font = 2, las = 1)
 qqline(resid(m1.SoilNMR),col='red')
-plot(m1.SoilNMR,which=4,main=NULL)
-# model summary/diagnostics
+plot(m1.SoilNMR,which=4,main=NULL, cex.lab=1.15)
+mtext("D", side = 2, line = 2, at = .49, col = 'black', font = 2, las = 1)
+dev.off()
+
+# Model summary/diagnostics
 summary(m1.SoilNMR)
 exp(logLik(m1.SoilNMR))
 anova(m1.SoilNMR)
@@ -55,11 +64,20 @@ m1ANODEV
 library(betareg)
 m3<-betareg(CC~Region+Layer+Region*Layer,data=SoilNMR)
 plot(m3)
-# diagnostic plots for manuscript
-plot(m3,which=1,type="pearson")
-plot(m3,which=4,type="pearson")
-plot(m3,which=5,type="deviance")
-plot(m3,which=2,type="pearson")
+
+# Plots for manuscript - Carbonyl Carbon Beta
+png("CarbonylCarbon_DiagnosticPlotsBeta.png",  width = 160, height = 160, units = "mm",res = 600)
+par(mfrow=c(2,2))
+plot(m3,which=1,type="pearson",cex.lab=1.15, caption=NULL)
+mtext("A",side=2,line=2,at=2.5,col='black',font=2,las=1)
+plot(m3,which=4,type="pearson",cex.lab=1.15, caption=NULL)
+mtext("B",side=2,line=2,at=2.5,col='black',font=2,las=1)
+plot(m3,which=5,type="deviance",cex.lab=1.15, caption=NULL)
+mtext("C",side=2,line=2,at=3.7,col='black',font=2,las=1)
+plot(m3,which=2,type="pearson", cex.lab=1.15, caption=NULL)
+mtext("D",side=2,line=2,at=0.27,col='black',font=2,las=1)
+dev.off()
+
 # model summary
 summary(m3)
 #ANODEV
@@ -144,16 +162,12 @@ m4.SoilNMR<-glm(AC~Region+Layer+Region*Layer,data=na.omit(SoilNMR),
                 family = gaussian(link="identity"))
 plot(m4.SoilNMR)
 hist(resid(m4.SoilNMR))
-# plots for manuscript
-plot(x=fitted(m4.SoilNMR),y=resid(m4.SoilNMR),main=NULL,xlab="Fitted Values",ylab="Residuals")
-hist(resid(m4.SoilNMR),main=NULL,xlab="Residuals")
-qqnorm(resid(m4.SoilNMR),main=NULL)
-qqline(resid(m4.SoilNMR),col='red')
-plot(m4.SoilNMR,which=4,main=NULL)
+
 # model summary/diagnostics
 summary(m4.SoilNMR)
 exp(logLik(m4.SoilNMR))
 anova(m4.SoilNMR)
+
 #ANODEV
 m4.intercept<-glm(AC~1,data=na.omit(SoilNMR),
                   family=gaussian(link = "identity"))
@@ -166,15 +180,25 @@ m4.OHCCCR<-glm(AC~1+Region+Layer+Region*Layer,data=na.omit(SoilNMR),
 m4ANODEV<-lrtest(m4.intercept,m4.OHCC,m4.CR,m4.OHCCCR)
 m4ANODEV
 
+# Plot for manuscript - Alkyl Carbon GLM
+png("AlkylCarbon_DiagnosticPlotsGLM.png", width = 160, height = 160, units = "mm", res = 600)
+par(mfrow=c(2,2))
+plot(x=fitted(m4.SoilNMR),y=resid(m1.SoilNMR),main=NULL,xlab="Fitted Values",ylab="Residuals",cex.lab=1.15)
+mtext("A", side = 2, line = 2, at = 0.009, col = 'black', font = 2, las = 1)
+hist(resid(m4.SoilNMR),main=NULL,xlab="Residuals", cex.lab=1.15)
+mtext("B", side = 2, line = 2, at = 14.5, col = 'black', font = 2, las = 1)
+qqnorm(resid(m4.SoilNMR),main=NULL, cex.lab=1.15)
+mtext("C", side = 2, line = 2, at = 0.06, col = 'black', font = 2, las = 1)
+qqline(resid(m4.SoilNMR),col='red')
+plot(m4.SoilNMR,which=4,main=NULL, cex.lab=1.15)
+mtext("D", side = 2, line = 2, at = .53, col = 'black', font = 2, las = 1)
+dev.off()
+
 # Regular beta regressions {betareg}
 library(betareg)
 m6.SoilNMR<-betareg(AC~Region+Layer+Region*Layer,data=SoilNMR)
 plot(m6.SoilNMR)
-# diagnostic plots for manuscript
-plot(m6.SoilNMR,which=1,type="pearson")
-plot(m6.SoilNMR,which=4,type="pearson")
-plot(m6.SoilNMR,which=5,type="deviance")
-plot(m6.SoilNMR,which=2,type="pearson")
+
 # model summary
 summary(m6.SoilNMR)
 #ANODEV
@@ -187,6 +211,18 @@ install.packages("lrtest")
 m6ANODEV<-lrtest(m6.intercept,m6.OHCC,m6.CR,m6.OHCCCR)
 m6ANODEV # same result as the GLMMTMB
 
+# Plots for manuscript - Alkyl Carbon Beta
+png("AlkylCarbon_DiagnosticPlotsBeta.png",  width = 160, height = 160, units = "mm",res = 600)
+par(mfrow=c(2,2))
+plot(m6.SoilNMR,which=1,type="pearson",cex.lab=1.15, caption=NULL)
+mtext("A",side=2,line=2,at=3,col='black',font=2,las=1)
+plot(m6.SoilNMR,which=4,type="pearson",cex.lab=1.15, caption=NULL)
+mtext("B",side=2,line=2,at=3,col='black',font=2,las=1)
+plot(m6.SoilNMR,which=5,type="deviance",cex.lab=1.15, caption=NULL)
+mtext("C",side=2,line=2,at=3.6,col='black',font=2,las=1)
+plot(m6.SoilNMR,which=2,type="pearson", cex.lab=1.15, caption=NULL)
+mtext("D",side=2,line=2,at=0.44,col='black',font=2,las=1)
+dev.off()
 
 # ---- Model comparison: SoilNMR ----
 glm.model.SoilNMR.AC<-as.data.frame(m4ANODEV)%>%
